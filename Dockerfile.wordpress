@@ -1,0 +1,49 @@
+FROM ubuntu:18.04
+
+LABEL author="Vetal"
+#set timezone
+ENV TZ=Europe/Kiev
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+#update system
+RUN apt-get update -y
+RUN apt-get upgrade -y
+
+#install Apache
+RUN apt-get install -y apache2
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+#install PHP
+RUN apt-get install -y php
+RUN apt-get install -y php-dev
+RUN apt-get install -y php-mysql
+RUN apt-get install -y libapache2-mod-php
+RUN echo "<?php phpinfo(); ?>" > /var/www/html/info.php
+
+#install mysql-client
+RUN apt install -y mysql-client
+
+#restart apache and go to ground
+CMD ["apachectl","-D","FOREGROUND"]
+RUN a2enmod rewrite
+
+#expose ports
+EXPOSE 80
+EXPOSE 443
+
+#go to temp directory and download the latest WordPress File
+RUN cd /tmp 
+RUN apt-get install -y wget
+RUN wget https://wordpress.org/latest.tar.gz
+
+#uncompreess file
+RUN tar -xvf latest.tar.gz
+
+#copy wordpress to server
+RUN cp -R wordpress /var/www/html/
+
+#change owner and permissions
+RUN chown -R www-data:www-data /var/www/html/wordpress/
+RUN chmod -R 755 /var/www/html/wordpress/
+RUN mkdir /var/www/html/wordpress/wp-content/uploads
+RUN chown -R www-data:www-data /var/www/html/wordpress/wp-content/uploads/
