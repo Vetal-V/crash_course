@@ -1,6 +1,17 @@
 ## DevOps Crash Course
 
-1. Build image:
+1. Run containers using docker-compose
+	- To run containers create file with envirovment variables `MYSQL_ROOT_PASSWORD`, `MYSQL_USER` and `MYSQL_PASSWORD`, for example:
+		```
+		MYSQL_ROOT_PASSWORD=root
+		MYSQL_USER=user_wp
+		MYSQL_PASSWORD=password_wp
+		```
+	- Then run docker-compose detached execute the command:
+		```
+		docker-compose up -d
+		```
+2. Build image:
 	- To builds the images of LAMP stack from a Dockerfile run commands:
 		```
 		docker build -t lamp:v1 -f Dockerfile.lamp .
@@ -10,7 +21,7 @@
 		```
 		docker build -t wordpress:v1 -f Dockerfile.wordpress .
 		```
-2. Run container
+3. Run container
 	- To run the container of LAMP stack execute the command:
 		```
 		docker run -d -p 80:80 --name=lamp lamp:v1
@@ -34,7 +45,7 @@
 			```
 		- You’ll be presented with a WordPress wizard and a list of credentials required to successfully set it up
 
-3. Pull from Docker Hub
+4. Pull from Docker Hub
 	- To pull the image of LAMP stack from Docker Hub run command:
 		```
 		docker pull vetalvr/crash_course:lamp
